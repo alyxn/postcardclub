@@ -14,7 +14,7 @@
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text y="16" font-size="16">✿</text></svg>'), auto;
         }
         
-        button, .stamp, .shutter-btn, .symbol-btn {
+        button, .stamp, .shutter-btn, .symbol-btn, input[type="file"] + label {
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text y="16" font-size="16">♡</text></svg>'), pointer !important;
         }
         
@@ -107,6 +107,9 @@
             aspect-ratio: 4/3;
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .viewfinder video,
@@ -115,6 +118,12 @@
             height: 100%;
             object-fit: cover;
             border-radius: 10px;
+        }
+        
+        .viewfinder-placeholder {
+            color: #666;
+            text-align: center;
+            font-size: 0.9em;
         }
         
         .camera-flash {
@@ -126,6 +135,7 @@
             background: white;
             opacity: 0;
             pointer-events: none;
+            border-radius: 10px;
         }
         
         .camera-flash.active {
@@ -192,10 +202,7 @@
             border: 1px solid #c9c1bd;
             margin-bottom: 15px;
             background: #f0ebe7;
-        }
-        
-        .message-section {
-            position: relative;
+            display: block;
         }
         
         textarea {
@@ -208,11 +215,14 @@
             background: #fefdfb;
             resize: none;
             color: #4a4a4a;
-            margin-bottom: 10px;
         }
         
         textarea:focus {
             outline: 2px solid #c4b8b0;
+        }
+        
+        .message-section {
+            position: relative;
         }
         
         .signature-input {
@@ -321,6 +331,30 @@
         .btn-primary:hover {
             background: #a89e96;
             box-shadow: 1px 1px 0px #9d8d85;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        .file-upload-label {
+            display: inline-block;
+            background: #d4ccc8;
+            color: #5a5a5a;
+            border: 2px solid #bfb5ad;
+            border-radius: 20px;
+            padding: 10px 25px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.95em;
+            transition: all 0.2s;
+            margin: 5px;
+            box-shadow: 2px 2px 0px #bfb5ad;
+        }
+        
+        .file-upload-label:hover {
+            background: #c9bfb7;
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px #bfb5ad;
         }
         
         .mailbox-animation {
@@ -496,49 +530,52 @@
                 <div class="camera-top">
                     <span class="camera-brand">POLAROID</span>
                 </div>
-                <div class="viewfinder">
-                    <video id="video" autoplay playsinline></video>
+                <div class="viewfinder" id="viewfinder">
+                    <video id="video" autoplay playsinline style="display:none;"></video>
                     <canvas id="canvas" style="display:none;"></canvas>
+                    <div class="viewfinder-placeholder" id="placeholder">
+                        camera loading...
+                    </div>
                     <div class="camera-flash" id="flash"></div>
                 </div>
                 <div class="camera-bottom">
                     <div class="flash-bulb"></div>
-                    <div class="shutter-btn" id="shutterBtn"></div>
+                    <button class="shutter-btn" id="shutterBtn"></button>
                     <div class="flash-bulb"></div>
                 </div>
             </div>
             <div class="upload-hint">
-                <button class="btn" id="uploadBtn">upload image</button>
-                <input type="file" id="fileInput" accept="image/*" style="display:none;">
+                <input type="file" id="fileInput" accept="image/*">
+                <label for="fileInput" class="file-upload-label">upload image</label>
             </div>
         </div>
         
         <!-- Step 2: Write Message -->
         <div class="step" id="step2">
             <div class="postcard-preview">
-                <img id="capturedImage" class="postcard-image">
+                <img id="capturedImage" class="postcard-image" alt="Your postcard image">
                 <div class="message-section">
                     <textarea id="message" placeholder="write your message..."></textarea>
                     <div class="symbols-bar">
-                        <button class="symbol-btn" onclick="insertSymbol('★')">★</button>
-                        <button class="symbol-btn" onclick="insertSymbol('♡')">♡</button>
-                        <button class="symbol-btn" onclick="insertSymbol('✿')">✿</button>
-                        <button class="symbol-btn" onclick="insertSymbol('☆')">☆</button>
-                        <button class="symbol-btn" onclick="insertSymbol('◇')">◇</button>
-                        <button class="symbol-btn" onclick="insertSymbol('○')">○</button>
-                        <button class="symbol-btn" onclick="insertSymbol('△')">△</button>
-                        <button class="symbol-btn" onclick="insertSymbol('□')">□</button>
-                        <button class="symbol-btn" onclick="insertSymbol('♪')">♪</button>
-                        <button class="symbol-btn" onclick="insertSymbol('☁')">☁</button>
-                        <button class="symbol-btn" onclick="insertSymbol('✩')">✩</button>
-                        <button class="symbol-btn" onclick="insertSymbol('⊹')">⊹</button>
+                        <button class="symbol-btn" type="button" data-symbol="★">★</button>
+                        <button class="symbol-btn" type="button" data-symbol="♡">♡</button>
+                        <button class="symbol-btn" type="button" data-symbol="✿">✿</button>
+                        <button class="symbol-btn" type="button" data-symbol="☆">☆</button>
+                        <button class="symbol-btn" type="button" data-symbol="◇">◇</button>
+                        <button class="symbol-btn" type="button" data-symbol="○">○</button>
+                        <button class="symbol-btn" type="button" data-symbol="△">△</button>
+                        <button class="symbol-btn" type="button" data-symbol="□">□</button>
+                        <button class="symbol-btn" type="button" data-symbol="♪">♪</button>
+                        <button class="symbol-btn" type="button" data-symbol="☁">☁</button>
+                        <button class="symbol-btn" type="button" data-symbol="✩">✩</button>
+                        <button class="symbol-btn" type="button" data-symbol="⊹">⊹</button>
                     </div>
                     <input type="text" class="signature-input" id="signature" placeholder="sign your name... (optional)">
                 </div>
             </div>
             <div class="button-group">
-                <button class="btn" onclick="goToStep(1)">← back</button>
-                <button class="btn btn-primary" onclick="goToStep(3)">continue →</button>
+                <button class="btn" type="button" data-step="1">← back</button>
+                <button class="btn btn-primary" type="button" data-step="3">continue →</button>
             </div>
         </div>
         
@@ -546,24 +583,24 @@
         <div class="step" id="step3">
             <h2 style="text-align: center; margin-bottom: 20px; font-size: 1.2em; color: #8b7d7d; font-weight: normal;">select stamp</h2>
             <div class="stamps-container">
-                <div class="stamp" onclick="selectStamp(this, '✿ flower ✿')">✿<br>flower</div>
-                <div class="stamp" onclick="selectStamp(this, '☆ star ☆')">☆<br>star</div>
-                <div class="stamp" onclick="selectStamp(this, '♡ heart ♡')">♡<br>heart</div>
-                <div class="stamp" onclick="selectStamp(this, '◇ diamond ◇')">◇<br>diamond</div>
-                <div class="stamp" onclick="selectStamp(this, '☁ cloud ☁')">☁<br>cloud</div>
-                <div class="stamp" onclick="selectStamp(this, '♪ music ♪')">♪<br>music</div>
-                <div class="stamp" onclick="selectStamp(this, '★ sparkle ★')">★<br>sparkle</div>
-                <div class="stamp" onclick="selectStamp(this, '○ circle ○')">○<br>circle</div>
+                <div class="stamp" data-stamp="✿ flower ✿">✿<br>flower</div>
+                <div class="stamp" data-stamp="☆ star ☆">☆<br>star</div>
+                <div class="stamp" data-stamp="♡ heart ♡">♡<br>heart</div>
+                <div class="stamp" data-stamp="◇ diamond ◇">◇<br>diamond</div>
+                <div class="stamp" data-stamp="☁ cloud ☁">☁<br>cloud</div>
+                <div class="stamp" data-stamp="♪ music ♪">♪<br>music</div>
+                <div class="stamp" data-stamp="★ sparkle ★">★<br>sparkle</div>
+                <div class="stamp" data-stamp="○ circle ○">○<br>circle</div>
             </div>
             <div class="postcard-preview">
-                <img id="finalImage" class="postcard-image">
+                <img id="finalImage" class="postcard-image" alt="Final postcard">
                 <p style="padding: 12px; background: #fefdfb; border: 1px solid #e8e3df; min-height: 80px; font-size: 0.9em;" id="finalMessage"></p>
-                <p style="padding: 12px; background: #faf8f5; border-top: 1px dashed #e8e3df; font-size: 0.85em; font-style: italic; color: #8b7d7d;" id="finalSignature"></p>
+                <p style="padding: 12px; background: #faf8f5; border-top: 1px dashed #e8e3df; font-size: 0.85em; font-style: italic; color: #8b7d7d; display: none;" id="finalSignature"></p>
                 <div style="text-align: right; font-size: 1.2em; margin-top: 10px; font-family: 'Courier Prime', monospace;" id="selectedStamp"></div>
             </div>
             <div class="button-group">
-                <button class="btn" onclick="goToStep(2)">← back</button>
-                <button class="btn btn-primary" onclick="goToStep(4)">continue →</button>
+                <button class="btn" type="button" data-step="2">← back</button>
+                <button class="btn btn-primary" type="button" data-step="4">continue →</button>
             </div>
         </div>
         
@@ -571,18 +608,18 @@
         <div class="step" id="step4">
             <h2 style="text-align: center; margin-bottom: 20px; font-size: 1.2em; color: #8b7d7d; font-weight: normal;">send postcard</h2>
             <div class="options-grid">
-                <button class="btn btn-primary" onclick="sendEmail()">email</button>
-                <button class="btn btn-primary" onclick="downloadPostcard()">download</button>
-                <button class="btn btn-primary" onclick="sharePostcard()">share</button>
+                <button class="btn btn-primary" type="button" id="emailBtn">email</button>
+                <button class="btn btn-primary" type="button" id="downloadBtn">download</button>
+                <button class="btn btn-primary" type="button" id="shareBtn">share</button>
             </div>
             <div id="emailForm" style="display:none; margin-top: 20px;">
                 <input type="email" id="recipientEmail" placeholder="recipient@email.com">
                 <div style="text-align: center;">
-                    <button class="btn btn-primary" onclick="confirmSend()">send →</button>
+                    <button class="btn btn-primary" type="button" id="confirmSendBtn">send →</button>
                 </div>
             </div>
             <div class="button-group">
-                <button class="btn" onclick="goToStep(3)">← back</button>
+                <button class="btn" type="button" data-step="3">← back</button>
             </div>
         </div>
         
@@ -591,7 +628,7 @@
             <div class="thank-you-page">
                 <h2>✿ thank you ✿</h2>
                 <p>i hope you find magic<br>in the mundane</p>
-                <button class="btn btn-primary" onclick="resetAndStart()">send another postcard</button>
+                <button class="btn btn-primary" type="button" id="resetBtn">send another postcard</button>
             </div>
         </div>
     </div>
@@ -620,67 +657,60 @@
     <script>
         let stream = null;
         let capturedImageData = null;
-        let selectedStampEmoji = '';
+        let selectedStampText = '';
         
+        const video = document.getElementById('video');
+        const placeholder = document.getElementById('placeholder');
+        
+        // Initialize camera
         async function initCamera() {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { facingMode: 'user', width: 640, height: 480 } 
                 });
-                const video = document.getElementById('video');
                 video.srcObject = stream;
+                video.style.display = 'block';
+                placeholder.style.display = 'none';
                 await video.play();
             } catch (err) {
-                console.log('Camera not available:', err);
-                document.querySelector('.camera-bottom').innerHTML += 
-                    '<p style="color: #8b7d7d; font-size: 0.8em; margin-top: 10px;">camera not available - please upload an image</p>';
+                console.error('Camera error:', err);
+                placeholder.textContent = 'camera not available - please upload an image';
             }
         }
         
-        // Try to init camera when page loads
+        // Start camera if available
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             initCamera();
+        } else {
+            placeholder.textContent = 'camera not supported - please upload an image';
         }
         
-        document.getElementById('uploadBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Upload button clicked');
-            const fileInput = document.getElementById('fileInput');
-            fileInput.click();
-        });
-        
-        document.getElementById('fileInput').addEventListener('change', function(event) {
-            console.log('File selected');
-            const file = event.target.files[0];
+        // File upload
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
             if (file) {
-                console.log('Processing file:', file.name);
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    capturedImageData = e.target.result;
+                reader.onload = function(event) {
+                    capturedImageData = event.target.result;
                     document.getElementById('capturedImage').src = capturedImageData;
                     if (stream) {
                         stream.getTracks().forEach(track => track.stop());
                     }
                     goToStep(2);
                 };
-                reader.onerror = function(e) {
-                    console.error('Error reading file:', e);
-                    alert('Error loading image. Please try again.');
-                };
                 reader.readAsDataURL(file);
             }
         });
         
+        // Take photo with camera
         document.getElementById('shutterBtn').addEventListener('click', function() {
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const flash = document.getElementById('flash');
-            
-            // Check if video is ready
-            if (video.readyState < 2) {
-                alert('Camera is still loading or not available. Please try uploading an image instead.');
+            if (video.readyState < 2 || video.style.display === 'none') {
+                alert('Camera not ready. Please upload an image instead.');
                 return;
             }
+            
+            const canvas = document.getElementById('canvas');
+            const flash = document.getElementById('flash');
             
             canvas.width = video.videoWidth || 640;
             canvas.height = video.videoHeight || 480;
@@ -701,15 +731,107 @@
             goToStep(2);
         });
         
-        function insertSymbol(symbol) {
-            const textarea = document.getElementById('message');
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const text = textarea.value;
-            textarea.value = text.substring(0, start) + symbol + text.substring(end);
-            textarea.selectionStart = textarea.selectionEnd = start + symbol.length;
-            textarea.focus();
-        }
+        // Symbol buttons
+        document.querySelectorAll('.symbol-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const symbol = this.getAttribute('data-symbol');
+                const textarea = document.getElementById('message');
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const text = textarea.value;
+                textarea.value = text.substring(0, start) + symbol + text.substring(end);
+                textarea.selectionStart = textarea.selectionEnd = start + symbol.length;
+                textarea.focus();
+            });
+        });
+        
+        // Navigation buttons
+        document.querySelectorAll('[data-step]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const step = parseInt(this.getAttribute('data-step'));
+                goToStep(step);
+            });
+        });
+        
+        // Stamp selection
+        document.querySelectorAll('.stamp').forEach(stamp => {
+            stamp.addEventListener('click', function() {
+                document.querySelectorAll('.stamp').forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedStampText = this.getAttribute('data-stamp');
+                document.getElementById('selectedStamp').textContent = selectedStampText;
+            });
+        });
+        
+        // Send options
+        document.getElementById('emailBtn').addEventListener('click', function() {
+            document.getElementById('emailForm').style.display = 'block';
+        });
+        
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            createFinalImage((finalImage) => {
+                const link = document.createElement('a');
+                link.download = 'postcard.png';
+                link.href = finalImage;
+                link.click();
+            });
+            setTimeout(() => goToStep(5), 500);
+        });
+        
+        document.getElementById('shareBtn').addEventListener('click', async function() {
+            createFinalImage(async (finalImage) => {
+                try {
+                    const blob = await (await fetch(finalImage)).blob();
+                    const file = new File([blob], 'postcard.png', { type: 'image/png' });
+                    
+                    if (navigator.share && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'My Postcard',
+                            text: 'Check out my postcard!'
+                        });
+                        goToStep(5);
+                    } else {
+                        const link = document.createElement('a');
+                        link.download = 'postcard.png';
+                        link.href = finalImage;
+                        link.click();
+                        setTimeout(() => goToStep(5), 500);
+                    }
+                } catch (err) {
+                    console.error('Share error:', err);
+                    const link = document.createElement('a');
+                    link.download = 'postcard.png';
+                    link.href = finalImage;
+                    link.click();
+                    setTimeout(() => goToStep(5), 500);
+                }
+            });
+        });
+        
+        document.getElementById('confirmSendBtn').addEventListener('click', function() {
+            const email = document.getElementById('recipientEmail').value;
+            if (email) {
+                showMailboxAnimation();
+            } else {
+                alert('please enter an email address');
+            }
+        });
+        
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            document.getElementById('message').value = '';
+            document.getElementById('signature').value = '';
+            document.getElementById('recipientEmail').value = '';
+            document.getElementById('emailForm').style.display = 'none';
+            selectedStampText = '';
+            document.getElementById('selectedStamp').textContent = '';
+            document.querySelectorAll('.stamp').forEach(s => s.classList.remove('selected'));
+            capturedImageData = null;
+            goToStep(1);
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                initCamera();
+            }
+        });
         
         function goToStep(stepNum) {
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
@@ -728,61 +850,20 @@
                 document.getElementById('finalImage').src = capturedImageData;
                 document.getElementById('finalMessage').textContent = document.getElementById('message').value || '(no message)';
                 const sig = document.getElementById('signature').value;
-                document.getElementById('finalSignature').textContent = sig ? '- ' + sig : '';
-                document.getElementById('finalSignature').style.display = sig ? 'block' : 'none';
+                const sigElement = document.getElementById('finalSignature');
+                if (sig) {
+                    sigElement.textContent = '- ' + sig;
+                    sigElement.style.display = 'block';
+                } else {
+                    sigElement.style.display = 'none';
+                }
             }
             
             if (stepNum === 1 && !stream) {
-                initCamera();
-            }
-        }
-        
-        function selectStamp(element, text) {
-            document.querySelectorAll('.stamp').forEach(s => s.classList.remove('selected'));
-            element.classList.add('selected');
-            selectedStampEmoji = text;
-            document.getElementById('selectedStamp').textContent = text;
-        }
-        
-        function sendEmail() {
-            document.getElementById('emailForm').style.display = 'block';
-        }
-        
-        function confirmSend() {
-            const email = document.getElementById('recipientEmail').value;
-            if (email) {
-                showMailboxAnimation();
-            } else {
-                alert('please enter an email address');
-            }
-        }
-        
-        function downloadPostcard() {
-            createFinalImage((finalImage) => {
-                const link = document.createElement('a');
-                link.download = 'postcard.png';
-                link.href = finalImage;
-                link.click();
-            });
-            setTimeout(() => goToStep(5), 500);
-        }
-        
-        function sharePostcard() {
-            createFinalImage(async (finalImage) => {
-                const blob = await (await fetch(finalImage)).blob();
-                const file = new File([blob], 'postcard.png', { type: 'image/png' });
-                
-                if (navigator.share && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: 'My Postcard',
-                        text: 'Check out my postcard!'
-                    });
-                    goToStep(5);
-                } else {
-                    downloadPostcard();
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    initCamera();
                 }
-            });
+            }
         }
         
         function createFinalImage(callback) {
@@ -818,7 +899,7 @@
                 
                 ctx.fillStyle = '#8b7d7d';
                 ctx.font = '20px "Courier Prime"';
-                ctx.fillText(selectedStampEmoji, 650, 550);
+                ctx.fillText(selectedStampText, 650, 550);
                 
                 callback(canvas.toDataURL('image/png'));
             };
@@ -853,5 +934,6 @@
                 goToStep(5);
             }, 3000);
         }
-        
-        function resetAndStart()
+    </script>
+</body>
+</html>
