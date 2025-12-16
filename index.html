@@ -14,7 +14,7 @@
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text y="16" font-size="16">✿</text></svg>'), auto;
         }
         
-        button, .stamp, .shutter-btn, .symbol-btn, input[type="file"] + label {
+        button, .stamp, .shutter-btn, .symbol-btn, input[type="file"] + label, .popup-btn {
             cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><text y="16" font-size="16">♡</text></svg>'), pointer !important;
         }
         
@@ -68,6 +68,149 @@
             display: block;
         }
         
+        /* Welcome Popup */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .popup-overlay.hidden {
+            display: none;
+        }
+        
+        .popup-window {
+            background: #c4c4c4;
+            border: 3px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+            min-width: 400px;
+            max-width: 500px;
+        }
+        
+        .popup-title-bar {
+            background: linear-gradient(to right, #000080, #1084d0);
+            color: white;
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+        }
+        
+        .popup-close {
+            background: #c4c4c4;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: black;
+            font-size: 0.8em;
+        }
+        
+        .popup-content {
+            background: #c4c4c4;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .popup-text {
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .popup-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .popup-btn {
+            background: #c4c4c4;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            padding: 8px 20px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.9em;
+            min-width: 80px;
+        }
+        
+        .popup-btn:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+        }
+        
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f5f3f0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1500;
+            flex-direction: column;
+        }
+        
+        .loading-screen.active {
+            display: flex;
+        }
+        
+        .loading-polaroid {
+            width: 200px;
+            height: 220px;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .loading-image {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to bottom, #e0e0e0 0%, #f0f0f0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loading-reveal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(to bottom, #8b7d7d 0%, #a39999 100%);
+            animation: revealPhoto 2s ease-in-out infinite;
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            font-family: 'VT323', monospace;
+            font-size: 1.5em;
+            color: #8b7d7d;
+            letter-spacing: 2px;
+        }
+        
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        /* Camera */
         .polaroid-camera {
             background: linear-gradient(180deg, #e8dfd7 0%, #d6cdc5 100%);
             border: 3px solid #bfb5ad;
@@ -120,6 +263,31 @@
             border-radius: 10px;
         }
         
+        .countdown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border-radius: 10px;
+        }
+        
+        .countdown-overlay.active {
+            display: flex;
+        }
+        
+        .countdown-number {
+            font-size: 6em;
+            color: white;
+            font-family: 'VT323', monospace;
+            animation: countdownPulse 1s ease;
+        }
+        
         .viewfinder-placeholder {
             color: #666;
             text-align: center;
@@ -147,6 +315,24 @@
             justify-content: center;
             align-items: center;
             gap: 20px;
+        }
+        
+        .camera-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        
+        .camera-switch {
+            background: #d4ccc8;
+            color: #5a5a5a;
+            border: 2px solid #bfb5ad;
+            border-radius: 15px;
+            padding: 6px 15px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.8em;
         }
         
         .shutter-btn {
@@ -188,28 +374,86 @@
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        .postcard-preview {
-            background: #faf8f5;
+        /* Postcard Preview */
+        .postcard-container {
+            background: white;
+            padding: 15px;
             border: 2px solid #d4ccc8;
-            padding: 20px;
-            margin: 20px 0;
+            box-shadow: 3px 3px 0px #e8e3df;
+        }
+        
+        .postcard-front {
+            position: relative;
+        }
+        
+        .postcard-image-container {
+            width: 100%;
+            aspect-ratio: 3/2;
+            background: #f0ebe7;
+            border: 3px solid #e8e3df;
+            margin-bottom: 15px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .postcard-image {
-            width: 100%;
-            height: 280px;
-            object-fit: cover;
-            border: 1px solid #c9c1bd;
-            margin-bottom: 15px;
-            background: #f0ebe7;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
             display: block;
+        }
+        
+        .postcard-divider {
+            width: 100%;
+            height: 2px;
+            background: repeating-linear-gradient(
+                to right,
+                #d4ccc8 0px,
+                #d4ccc8 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            margin: 15px 0;
+        }
+        
+        .postcard-back {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            min-height: 200px;
+        }
+        
+        .postcard-message {
+            border-right: 2px solid #e8e3df;
+            padding-right: 15px;
+        }
+        
+        .postcard-address {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .stamp-area {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        
+        .stamp-box {
+            display: inline-block;
+            border: 2px dashed #c4b8b0;
+            padding: 8px 12px;
+            font-size: 0.8em;
+            background: #faf8f5;
         }
         
         textarea {
             width: 100%;
             height: 100px;
             font-family: 'Courier Prime', monospace;
-            font-size: 0.95em;
+            font-size: 0.9em;
             padding: 12px;
             border: 1px solid #d4ccc8;
             background: #fefdfb;
@@ -264,6 +508,7 @@
             transform: scale(1.1);
         }
         
+        /* Stamps */
         .stamps-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -274,26 +519,65 @@
         .stamp {
             width: 100%;
             aspect-ratio: 1;
-            border: 2px dashed #c4b8b0;
-            border-radius: 8px;
+            border: 3px solid #d4ccc8;
+            border-radius: 4px;
             transition: all 0.2s;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 1.5em;
-            background: #fefdfb;
+            background: white;
             padding: 10px;
             text-align: center;
             line-height: 1.2;
+            position: relative;
+            box-shadow: inset 0 0 0 4px white, inset 0 0 0 6px #e8e3df;
+        }
+        
+        .stamp::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 4px,
+                #d4ccc8 4px,
+                #d4ccc8 5px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 4px,
+                #d4ccc8 4px,
+                #d4ccc8 5px
+            );
+            pointer-events: none;
+            border-radius: 4px;
+        }
+        
+        .stamp-icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+        
+        .stamp-label {
+            font-size: 0.7em;
+            color: #8b7d7d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .stamp:hover {
-            background: #f5f1ed;
+            transform: scale(1.05);
             border-color: #a89e96;
         }
         
         .stamp.selected {
-            border: 2px solid #8b7d7d;
+            border-color: #8b7d7d;
             background: #f0ebe7;
         }
         
@@ -375,30 +659,64 @@
             animation: fadeIn 0.3s ease;
         }
         
-        .mailbox {
-            font-size: 8em;
+        .mailbox-scene {
             position: relative;
-            text-align: center;
+            width: 300px;
+            height: 400px;
         }
         
-        .ascii-mailbox {
-            font-family: 'Courier Prime', monospace;
-            white-space: pre;
-            line-height: 1.2;
-            color: #8b7d7d;
-            font-size: 0.2em;
-        }
-        
-        .postcard-flying {
+        .mailbox-base {
             position: absolute;
-            top: -100px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 0.15em;
-            animation: dropInMailbox 1.5s ease forwards;
-            font-family: 'Courier Prime', monospace;
-            white-space: pre;
-            line-height: 1;
+            width: 120px;
+            height: 180px;
+            background: #8b7d7d;
+            border: 3px solid #6b5d5d;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .mailbox-flag {
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            width: 40px;
+            height: 8px;
+            background: #c94c4c;
+            border: 2px solid #a03c3c;
+            transform-origin: left center;
+        }
+        
+        .mailbox-slot {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 8px;
+            background: #2a2a2a;
+            border-radius: 2px;
+        }
+        
+        .letter-dropping {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 80px;
+            background: white;
+            border: 2px solid #d4ccc8;
+            animation: dropLetter 2s ease-in-out forwards;
+        }
+        
+        .letter-heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
         }
         
         .success-message {
@@ -407,7 +725,7 @@
             text-align: center;
             margin-top: 30px;
             opacity: 0;
-            animation: fadeIn 0.5s ease 1.2s forwards;
+            animation: fadeIn 0.5s ease 1.5s forwards;
             font-family: 'VT323', monospace;
             letter-spacing: 2px;
         }
@@ -499,21 +817,77 @@
             50% { opacity: 1; }
         }
         
-        @keyframes dropInMailbox {
+        @keyframes countdownPulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes revealPhoto {
+            0% { height: 0; }
+            100% { height: 100%; }
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+        
+        @keyframes dropLetter {
             0% {
-                top: -100px;
-                opacity: 1;
+                top: -50px;
                 transform: translateX(-50%) rotate(0deg);
+                opacity: 1;
+            }
+            70% {
+                top: 60px;
+                transform: translateX(-50%) rotate(15deg);
             }
             100% {
-                top: 200px;
+                top: 80px;
+                transform: translateX(-50%) rotate(20deg);
                 opacity: 0;
-                transform: translateX(-50%) rotate(15deg);
             }
         }
     </style>
 </head>
 <body>
+    <!-- Welcome Popup -->
+    <div class="popup-overlay" id="welcomePopup">
+        <div class="popup-window">
+            <div class="popup-title-bar">
+                <span>welcome to postcard.club</span>
+                <button class="popup-close" id="popupCloseBtn">×</button>
+            </div>
+            <div class="popup-content">
+                <div class="popup-text" id="popupQuestion">
+                    [PLACEHOLDER QUESTION]<br>
+                    do you believe in sending love through the internet?
+                </div>
+                <div class="popup-buttons" id="popupInitialButtons">
+                    <button class="popup-btn" id="yesBtn">Yes</button>
+                    <button class="popup-btn" id="noBtn">No</button>
+                </div>
+                <div class="popup-text" id="popupResponse" style="display:none;"></div>
+                <button class="popup-btn" id="popupOkBtn" style="display:none;">OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-polaroid">
+            <div class="loading-image">
+                <div class="loading-reveal"></div>
+            </div>
+        </div>
+        <div class="loading-text">
+            <span class="loading-dots">developing</span>
+        </div>
+    </div>
+    
     <header>
         <h1>postcard.club</h1>
         <p class="tagline">send love through the wire</p>
@@ -536,12 +910,18 @@
                     <div class="viewfinder-placeholder" id="placeholder">
                         camera loading...
                     </div>
+                    <div class="countdown-overlay" id="countdownOverlay">
+                        <div class="countdown-number" id="countdownNumber">3</div>
+                    </div>
                     <div class="camera-flash" id="flash"></div>
                 </div>
                 <div class="camera-bottom">
                     <div class="flash-bulb"></div>
                     <button class="shutter-btn" id="shutterBtn"></button>
                     <div class="flash-bulb"></div>
+                </div>
+                <div class="camera-controls">
+                    <button class="camera-switch" id="switchCamera">switch camera</button>
                 </div>
             </div>
             <div class="upload-hint">
@@ -552,388 +932,21 @@
         
         <!-- Step 2: Write Message -->
         <div class="step" id="step2">
-            <div class="postcard-preview">
-                <img id="capturedImage" class="postcard-image" alt="Your postcard image">
-                <div class="message-section">
-                    <textarea id="message" placeholder="write your message..."></textarea>
-                    <div class="symbols-bar">
-                        <button class="symbol-btn" type="button" data-symbol="★">★</button>
-                        <button class="symbol-btn" type="button" data-symbol="♡">♡</button>
-                        <button class="symbol-btn" type="button" data-symbol="✿">✿</button>
-                        <button class="symbol-btn" type="button" data-symbol="☆">☆</button>
-                        <button class="symbol-btn" type="button" data-symbol="◇">◇</button>
-                        <button class="symbol-btn" type="button" data-symbol="○">○</button>
-                        <button class="symbol-btn" type="button" data-symbol="△">△</button>
-                        <button class="symbol-btn" type="button" data-symbol="□">□</button>
-                        <button class="symbol-btn" type="button" data-symbol="♪">♪</button>
-                        <button class="symbol-btn" type="button" data-symbol="☁">☁</button>
-                        <button class="symbol-btn" type="button" data-symbol="✩">✩</button>
-                        <button class="symbol-btn" type="button" data-symbol="⊹">⊹</button>
+            <div class="postcard-container">
+                <div class="postcard-front">
+                    <div class="postcard-image-container">
+                        <img id="capturedImage" class="postcard-image" alt="Your postcard image">
                     </div>
-                    <input type="text" class="signature-input" id="signature" placeholder="sign your name... (optional)">
                 </div>
-            </div>
-            <div class="button-group">
-                <button class="btn" type="button" data-step="1">← back</button>
-                <button class="btn btn-primary" type="button" data-step="3">continue →</button>
-            </div>
-        </div>
-        
-        <!-- Step 3: Choose Stamp -->
-        <div class="step" id="step3">
-            <h2 style="text-align: center; margin-bottom: 20px; font-size: 1.2em; color: #8b7d7d; font-weight: normal;">select stamp</h2>
-            <div class="stamps-container">
-                <div class="stamp" data-stamp="✿ flower ✿">✿<br>flower</div>
-                <div class="stamp" data-stamp="☆ star ☆">☆<br>star</div>
-                <div class="stamp" data-stamp="♡ heart ♡">♡<br>heart</div>
-                <div class="stamp" data-stamp="◇ diamond ◇">◇<br>diamond</div>
-                <div class="stamp" data-stamp="☁ cloud ☁">☁<br>cloud</div>
-                <div class="stamp" data-stamp="♪ music ♪">♪<br>music</div>
-                <div class="stamp" data-stamp="★ sparkle ★">★<br>sparkle</div>
-                <div class="stamp" data-stamp="○ circle ○">○<br>circle</div>
-            </div>
-            <div class="postcard-preview">
-                <img id="finalImage" class="postcard-image" alt="Final postcard">
-                <p style="padding: 12px; background: #fefdfb; border: 1px solid #e8e3df; min-height: 80px; font-size: 0.9em;" id="finalMessage"></p>
-                <p style="padding: 12px; background: #faf8f5; border-top: 1px dashed #e8e3df; font-size: 0.85em; font-style: italic; color: #8b7d7d; display: none;" id="finalSignature"></p>
-                <div style="text-align: right; font-size: 1.2em; margin-top: 10px; font-family: 'Courier Prime', monospace;" id="selectedStamp"></div>
-            </div>
-            <div class="button-group">
-                <button class="btn" type="button" data-step="2">← back</button>
-                <button class="btn btn-primary" type="button" data-step="4">continue →</button>
-            </div>
-        </div>
-        
-        <!-- Step 4: Send Options -->
-        <div class="step" id="step4">
-            <h2 style="text-align: center; margin-bottom: 20px; font-size: 1.2em; color: #8b7d7d; font-weight: normal;">send postcard</h2>
-            <div class="options-grid">
-                <button class="btn btn-primary" type="button" id="emailBtn">email</button>
-                <button class="btn btn-primary" type="button" id="downloadBtn">download</button>
-                <button class="btn btn-primary" type="button" id="shareBtn">share</button>
-            </div>
-            <div id="emailForm" style="display:none; margin-top: 20px;">
-                <input type="email" id="recipientEmail" placeholder="recipient@email.com">
-                <div style="text-align: center;">
-                    <button class="btn btn-primary" type="button" id="confirmSendBtn">send →</button>
-                </div>
-            </div>
-            <div class="button-group">
-                <button class="btn" type="button" data-step="3">← back</button>
-            </div>
-        </div>
-        
-        <!-- Step 5: Thank You -->
-        <div class="step" id="step5">
-            <div class="thank-you-page">
-                <h2>✿ thank you ✿</h2>
-                <p>i hope you find magic<br>in the mundane</p>
-                <button class="btn btn-primary" type="button" id="resetBtn">send another postcard</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Mailbox Animation -->
-    <div class="mailbox-animation" id="mailboxAnimation">
-        <div>
-            <div class="mailbox">
-                <div class="ascii-mailbox">  ___________
- |  __   __ |
- | |  | |  ||
- | |  | |  ||
- | |__| |__||
- |    ___   |
- |   |   |  |
- |___|___|__|</div>
-                <div class="postcard-flying">┌─────┐
-│ ♡   │
-│  ✿  │
-└─────┘</div>
-            </div>
-            <div class="success-message">SENT!</div>
-        </div>
-    </div>
-    
-    <script>
-        let stream = null;
-        let capturedImageData = null;
-        let selectedStampText = '';
-        
-        const video = document.getElementById('video');
-        const placeholder = document.getElementById('placeholder');
-        
-        // Initialize camera
-        async function initCamera() {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'user', width: 640, height: 480 } 
-                });
-                video.srcObject = stream;
-                video.style.display = 'block';
-                placeholder.style.display = 'none';
-                await video.play();
-            } catch (err) {
-                console.error('Camera error:', err);
-                placeholder.textContent = 'camera not available - please upload an image';
-            }
-        }
-        
-        // Start camera if available
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            initCamera();
-        } else {
-            placeholder.textContent = 'camera not supported - please upload an image';
-        }
-        
-        // File upload
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    capturedImageData = event.target.result;
-                    document.getElementById('capturedImage').src = capturedImageData;
-                    if (stream) {
-                        stream.getTracks().forEach(track => track.stop());
-                    }
-                    goToStep(2);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        // Take photo with camera
-        document.getElementById('shutterBtn').addEventListener('click', function() {
-            if (video.readyState < 2 || video.style.display === 'none') {
-                alert('Camera not ready. Please upload an image instead.');
-                return;
-            }
-            
-            const canvas = document.getElementById('canvas');
-            const flash = document.getElementById('flash');
-            
-            canvas.width = video.videoWidth || 640;
-            canvas.height = video.videoHeight || 480;
-            
-            flash.classList.add('active');
-            setTimeout(() => flash.classList.remove('active'), 300);
-            
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            capturedImageData = canvas.toDataURL('image/png');
-            
-            document.getElementById('capturedImage').src = capturedImageData;
-            
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
-            
-            goToStep(2);
-        });
-        
-        // Symbol buttons
-        document.querySelectorAll('.symbol-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const symbol = this.getAttribute('data-symbol');
-                const textarea = document.getElementById('message');
-                const start = textarea.selectionStart;
-                const end = textarea.selectionEnd;
-                const text = textarea.value;
-                textarea.value = text.substring(0, start) + symbol + text.substring(end);
-                textarea.selectionStart = textarea.selectionEnd = start + symbol.length;
-                textarea.focus();
-            });
-        });
-        
-        // Navigation buttons
-        document.querySelectorAll('[data-step]').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const step = parseInt(this.getAttribute('data-step'));
-                goToStep(step);
-            });
-        });
-        
-        // Stamp selection
-        document.querySelectorAll('.stamp').forEach(stamp => {
-            stamp.addEventListener('click', function() {
-                document.querySelectorAll('.stamp').forEach(s => s.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedStampText = this.getAttribute('data-stamp');
-                document.getElementById('selectedStamp').textContent = selectedStampText;
-            });
-        });
-        
-        // Send options
-        document.getElementById('emailBtn').addEventListener('click', function() {
-            document.getElementById('emailForm').style.display = 'block';
-        });
-        
-        document.getElementById('downloadBtn').addEventListener('click', function() {
-            createFinalImage((finalImage) => {
-                const link = document.createElement('a');
-                link.download = 'postcard.png';
-                link.href = finalImage;
-                link.click();
-            });
-            setTimeout(() => goToStep(5), 500);
-        });
-        
-        document.getElementById('shareBtn').addEventListener('click', async function() {
-            createFinalImage(async (finalImage) => {
-                try {
-                    const blob = await (await fetch(finalImage)).blob();
-                    const file = new File([blob], 'postcard.png', { type: 'image/png' });
-                    
-                    if (navigator.share && navigator.canShare({ files: [file] })) {
-                        await navigator.share({
-                            files: [file],
-                            title: 'My Postcard',
-                            text: 'Check out my postcard!'
-                        });
-                        goToStep(5);
-                    } else {
-                        const link = document.createElement('a');
-                        link.download = 'postcard.png';
-                        link.href = finalImage;
-                        link.click();
-                        setTimeout(() => goToStep(5), 500);
-                    }
-                } catch (err) {
-                    console.error('Share error:', err);
-                    const link = document.createElement('a');
-                    link.download = 'postcard.png';
-                    link.href = finalImage;
-                    link.click();
-                    setTimeout(() => goToStep(5), 500);
-                }
-            });
-        });
-        
-        document.getElementById('confirmSendBtn').addEventListener('click', function() {
-            const email = document.getElementById('recipientEmail').value;
-            if (email) {
-                showMailboxAnimation();
-            } else {
-                alert('please enter an email address');
-            }
-        });
-        
-        document.getElementById('resetBtn').addEventListener('click', function() {
-            document.getElementById('message').value = '';
-            document.getElementById('signature').value = '';
-            document.getElementById('recipientEmail').value = '';
-            document.getElementById('emailForm').style.display = 'none';
-            selectedStampText = '';
-            document.getElementById('selectedStamp').textContent = '';
-            document.querySelectorAll('.stamp').forEach(s => s.classList.remove('selected'));
-            capturedImageData = null;
-            goToStep(1);
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                initCamera();
-            }
-        });
-        
-        function goToStep(stepNum) {
-            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-            document.getElementById('step' + stepNum).classList.add('active');
-            
-            const stepTexts = {
-                1: 'STEP 1: CAPTURE',
-                2: 'STEP 2: MESSAGE',
-                3: 'STEP 3: STAMP',
-                4: 'STEP 4: SEND',
-                5: ''
-            };
-            document.getElementById('stepText').textContent = stepTexts[stepNum];
-            
-            if (stepNum === 3) {
-                document.getElementById('finalImage').src = capturedImageData;
-                document.getElementById('finalMessage').textContent = document.getElementById('message').value || '(no message)';
-                const sig = document.getElementById('signature').value;
-                const sigElement = document.getElementById('finalSignature');
-                if (sig) {
-                    sigElement.textContent = '- ' + sig;
-                    sigElement.style.display = 'block';
-                } else {
-                    sigElement.style.display = 'none';
-                }
-            }
-            
-            if (stepNum === 1 && !stream) {
-                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    initCamera();
-                }
-            }
-        }
-        
-        function createFinalImage(callback) {
-            const canvas = document.createElement('canvas');
-            canvas.width = 800;
-            canvas.height = 600;
-            const ctx = canvas.getContext('2d');
-            
-            ctx.fillStyle = '#faf8f5';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            const img = new Image();
-            img.onload = function() {
-                ctx.drawImage(img, 20, 20, 760, 380);
-                
-                ctx.fillStyle = '#fefdfb';
-                ctx.fillRect(20, 420, 760, 140);
-                ctx.strokeStyle = '#d4ccc8';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(20, 420, 760, 140);
-                
-                ctx.fillStyle = '#4a4a4a';
-                ctx.font = '18px "Courier Prime"';
-                const message = document.getElementById('message').value || '(no message)';
-                wrapText(ctx, message, 35, 445, 730, 25);
-                
-                const sig = document.getElementById('signature').value;
-                if (sig) {
-                    ctx.fillStyle = '#8b7d7d';
-                    ctx.font = 'italic 16px "Courier Prime"';
-                    ctx.fillText('- ' + sig, 35, 540);
-                }
-                
-                ctx.fillStyle = '#8b7d7d';
-                ctx.font = '20px "Courier Prime"';
-                ctx.fillText(selectedStampText, 650, 550);
-                
-                callback(canvas.toDataURL('image/png'));
-            };
-            img.src = capturedImageData;
-        }
-        
-        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-            const words = text.split(' ');
-            let line = '';
-            let yPos = y;
-            
-            for (let n = 0; n < words.length; n++) {
-                const testLine = line + words[n] + ' ';
-                const metrics = ctx.measureText(testLine);
-                if (metrics.width > maxWidth && n > 0) {
-                    ctx.fillText(line, x, yPos);
-                    line = words[n] + ' ';
-                    yPos += lineHeight;
-                } else {
-                    line = testLine;
-                }
-            }
-            ctx.fillText(line, x, yPos);
-        }
-        
-        function showMailboxAnimation() {
-            const animation = document.getElementById('mailboxAnimation');
-            animation.classList.add('active');
-            
-            setTimeout(() => {
-                animation.classList.remove('active');
-                goToStep(5);
-            }, 3000);
-        }
-    </script>
-</body>
-</html>
+                <div class="postcard-divider"></div>
+                <div class="postcard-back">
+                    <div class="postcard-message">
+                        <textarea id="message" placeholder="write your message..."></textarea>
+                        <div class="symbols-bar">
+                            <button class="symbol-btn" type="button" data-symbol="★">★</button>
+                            <button class="symbol-btn" type="button" data-symbol="♡">♡</button>
+                            <button class="symbol-btn" type="button" data-symbol="✿">✿</button>
+                            <button class="symbol-btn" type="button" data-symbol="☆">☆</button>
+                            <button class="symbol-btn" type="button" data-symbol="◇">◇</button>
+                            <button class="symbol-btn" type="button" data-symbol="○">○</button>
+                            <button
